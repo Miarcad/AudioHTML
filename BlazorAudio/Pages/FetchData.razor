@@ -1,0 +1,82 @@
+﻿@page "/fetchdata"
+@using System.Timers
+@inject IJSRuntime js;
+
+<h1>Play WAV Files</h1>
+
+
+
+
+<audio id="myAudio" preload="auto">
+    <source src="/file_example_WAV_1MG.wav">
+    Your browser does not support the audio element.
+</audio>
+<button onclick="playAudio()" type="button">Play Audio</button>
+<button onclick="pauseAudio()" type="button">Pause Audio</button>
+<p>@play</p>
+
+@code
+{
+    Timer timer;
+    string play = "";
+    bool hidden = true;
+
+
+    protected override Task OnAfterRenderAsync(bool firstrender)
+    {
+        if (firstrender)
+        {
+            timer.Start();
+        }
+        return Task.CompletedTask;
+        //base.OnAfterRender(firstrender);
+    }
+
+
+    protected override void OnInitialized()
+    {
+        timer = new Timer(5000);
+
+        timer.Elapsed += (sender, e) => { PlayAudioFile1(); };
+
+    }
+
+
+    void PlayAudioFile1()
+    {
+        //play = "autoplay";
+        //InputAttributes.Remove("");
+        //InputAttributes.Add(play, "");
+
+        hidden = !hidden;
+        if (!hidden)
+        {
+            //InvokeAsync(() => StateHasChanged());
+            //timer.Stop();
+            try
+            {
+
+                js.InvokeVoidAsync("playAudio");
+
+            }
+            catch (Exception e)
+            {
+
+                Console.WriteLine(e.Message);
+            }
+        }
+        else
+        {
+            try
+            {
+                js.InvokeVoidAsync("pauseAudio");
+
+            }
+            catch (Exception e)
+            {
+
+                Console.WriteLine(e.Message);
+            }
+        }
+    }
+}
