@@ -33,23 +33,36 @@ namespace BlazorAudio
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddScoped<ISoundNotifier, SoundNotifier>();
-            if (string.Equals(
-                Environment.GetEnvironmentVariable("ASPNETCORE_FORWARDEDHEADERS_ENABLED"),
-                "true", StringComparison.OrdinalIgnoreCase))
-            {
-                services.Configure<ForwardedHeadersOptions>(options =>
-                {
-                    options.KnownProxies.Add(IPAddress.Parse("192.168.0.5"));
-                    options.KnownProxies.Add(IPAddress.Parse("192.168.0.1"));
-                });
-            }
-            services.AddHttpContextAccessor();
+
+
+
+            //if (string.Equals(
+            //    Environment.GetEnvironmentVariable("ASPNETCORE_FORWARDEDHEADERS_ENABLED"),
+            //    "true", StringComparison.OrdinalIgnoreCase))
+            //{
+            //    services.Configure<ForwardedHeadersOptions>(options =>
+            //    {
+            //        options.KnownProxies.Add(IPAddress.Parse("192.168.0.5"));
+            //        options.KnownProxies.Add(IPAddress.Parse("192.168.0.1"));
+            //    });
+            //}
+            //services.AddHttpContextAccessor();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env,ILogger<Startup> _logger)
         {
-                app.UseForwardedHeaders();
+            //app.UseForwardedHeaders();
+
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.All,
+                RequireHeaderSymmetry = false,
+                ForwardLimit = null,
+                KnownProxies = { IPAddress.Parse("192.168.0.1"), IPAddress.Parse("192.168.0.3"), IPAddress.Parse("172.17.0.1"), IPAddress.Parse("172.17.0.2") },
+            });
+
 
             app.Use(async (context, next) =>
             {
@@ -80,7 +93,7 @@ namespace BlazorAudio
                 app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseForwardedHeaders();
-                app.UseHsts();
+                //app.UseHsts();
             }
 
             app.Use((ctx, next) => { Console.WriteLine($"Remote Ip {ctx.Connection.RemoteIpAddress}");

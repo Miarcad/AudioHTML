@@ -4,15 +4,33 @@
 
 <h1>Play WAV Files</h1>
 
+<div class="card">
+    
+    <div class="card-body">
+        @if (!hidden)
+        {
+            <audio autoplay>
+                <source src="http://auto-sys.su:8082/say?text=%D0%9F%D1%80%D0%BE%D0%B9%D0%B4%D0%B8%D1%82%D0%B5%20%D0%B2%20%D0%BA%D0%B0%D0%B1%D0%B8%D0%BD%D0%B5%D1%82,%20%D0%BD%D0%BE%D0%BC%D0%B5%D1%80,%20237&amp;format=mp3&amp;rate=38" type="audio/mpeg">
+            </audio>
+        }
+        else
+        {
+            <audio muted>
+                <source src="http://auto-sys.su:8082/say?text=%D0%9F%D1%80%D0%BE%D0%B9%D0%B4%D0%B8%D1%82%D0%B5%20%D0%B2%20%D0%BA%D0%B0%D0%B1%D0%B8%D0%BD%D0%B5%D1%82,%20%D0%BD%D0%BE%D0%BC%D0%B5%D1%80,%20237&amp;format=opus&amp;rate=38" type="audio/ogg">
+            </audio>
+        }
+    </div>
+</div>
 
 
 
-<audio id="myAudio" preload="auto">
-    <source src="/file_example_WAV_1MG.wav">
+
+@*<audio id="myAudio" preload="auto">
+    <source src="http://auto-sys.su:8082/say?text=%D0%9F%D1%80%D0%BE%D0%B9%D0%B4%D0%B8%D1%82%D0%B5%20%D0%B2%20%D0%BA%D0%B0%D0%B1%D0%B8%D0%BD%D0%B5%D1%82,%20%D0%BD%D0%BE%D0%BC%D0%B5%D1%80,%20237&amp;format=mp3&amp;rate=38" type="audio/mpeg">
     Your browser does not support the audio element.
 </audio>
 <button onclick="playAudio()" type="button">Play Audio</button>
-<button onclick="pauseAudio()" type="button">Pause Audio</button>
+<button onclick="pauseAudio()" type="button">Pause Audio</button>*@
 <p>@play</p>
 
 @code
@@ -49,6 +67,7 @@
         //InputAttributes.Add(play, "");
 
         hidden = !hidden;
+       InvokeAsync(() => StateHasChanged());
         if (!hidden)
         {
             //InvokeAsync(() => StateHasChanged());
@@ -56,7 +75,7 @@
             try
             {
 
-                js.InvokeVoidAsync("playAudio");
+              //     js.InvokeVoidAsync("playAudio");
 
             }
             catch (Exception e)
@@ -69,7 +88,7 @@
         {
             try
             {
-                js.InvokeVoidAsync("pauseAudio");
+               //    js.InvokeVoidAsync("pauseAudio");
 
             }
             catch (Exception e)
